@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import { cookieParser } from "../utils/utils";
 dotenv.config();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createToken = (payload: any, refresh = false) => {
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET as string, {
     expiresIn: 30,

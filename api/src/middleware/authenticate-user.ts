@@ -22,6 +22,7 @@ export default function authenticateUser(
     if (!userTokenData) {
       throw new Error("Unauthorized");
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     req.user = userTokenData as any;
     next();
   } catch {

@@ -1,9 +1,8 @@
 import { Request } from "express";
-import { User } from "../entities/User";
 
 const extractQueryForRequest = (req: Request, query: string) => {
   if (req.query[query]) {
-    // @ts-ignore
+    // @ts-expect-error This is necessary to handle the case when the query parameter is expected to be parsed as JSON.
     return JSON.parse(req.query[query]);
   }
   return [];

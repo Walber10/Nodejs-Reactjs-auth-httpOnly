@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../entities/User";
-import AppDataSource from "../data-source";
+import { AppDataSource } from "../data-source";
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await User.find();
