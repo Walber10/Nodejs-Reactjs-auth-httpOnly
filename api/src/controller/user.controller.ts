@@ -22,6 +22,12 @@ export const getUserByEmail = async (email: string) => {
   return user;
 };
 
+export const createUser = async (req: Request, res: Response) => {
+  const user: User = User.create(req.body);
+  await AppDataSource.manager.save(user);
+  res.send({ message: "User created successfully", user });
+};
+
 export const updateUser = async (req: Request, res: Response) => {
   const user = await User.update(req.params.id, req.body);
   res.send({ message: "User updated successfully", user });

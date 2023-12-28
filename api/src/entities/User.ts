@@ -6,7 +6,6 @@ import {
   BaseEntity,
 } from "typeorm";
 
-
 @Entity("user")
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn("increment")
@@ -32,4 +31,11 @@ export class User extends BaseEntity {
 
   @CreateDateColumn()
   createdAt?: Date;
+
+  get formattedCreatedAt(): string {
+    if (!this.createdAt) {
+      return "N/A";
+    }
+    return this.createdAt.toLocaleString();
+  }
 }
