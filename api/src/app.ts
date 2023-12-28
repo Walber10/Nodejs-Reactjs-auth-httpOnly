@@ -29,6 +29,8 @@ app.use(
 app.use(errorHandler);
 app.use(rateLimiter);
 
+app.use(errorHandler);
+
 app.use("/api", routes);
 
 export default app;

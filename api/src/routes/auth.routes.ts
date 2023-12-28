@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { login } from "../controller/auth.controller";
-import { createSessionSchema } from "../schema/auth.schema";
+import { loginUser, registerUser } from "../controller/auth.controller";
+import { loginSchema } from "../schema/auth.schema";
 import verifySchema from "../middleware/validateResource";
 import {
+  createUserSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
   verifyUserSchema,
@@ -10,15 +11,13 @@ import {
 
 const authRoutes = Router();
 
-authRoutes.post("/login", verifySchema(createSessionSchema), login);
+authRoutes.post("/login", verifySchema(loginSchema), loginUser);
+authRoutes.post("/register", verifySchema(createUserSchema), registerUser);
 authRoutes.post(
   "/users/verify/:id/:verificationCode",
   verifySchema(verifyUserSchema)
 );
-authRoutes.post(
-  "/users/forgotpassword",
-  verifySchema(forgotPasswordSchema)
-);
+authRoutes.post("/users/forgotpassword", verifySchema(forgotPasswordSchema));
 authRoutes.post(
   "/users/resetpassword/:id/:passwordResetCode",
   verifySchema(resetPasswordSchema)

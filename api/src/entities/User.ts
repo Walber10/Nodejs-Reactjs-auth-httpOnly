@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   @Column({ type: "varchar" })
   password: string;
 
-  @Column({ type: "int" })
+  @Column({ type: "int", unique: true })
   mobile: number;
 
   @Column({ type: "boolean", default: false })
@@ -38,4 +38,5 @@ export class User extends BaseEntity {
     }
     return this.createdAt.toLocaleString();
   }
+
 }

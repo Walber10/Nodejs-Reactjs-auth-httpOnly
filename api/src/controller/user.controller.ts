@@ -9,7 +9,6 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   const user = await User.findBy({ id: parseInt(req.params.id) });
-
   if (!user) {
     res.status(404).send({ errors: { message: "User not found" } });
   } else {
@@ -22,11 +21,6 @@ export const getUserByEmail = async (email: string) => {
   return user;
 };
 
-export const createUser = async (req: Request, res: Response) => {
-  const user: User = User.create(req.body);
-  await AppDataSource.manager.save(user);
-  res.send({ message: "User created successfully", user });
-};
 
 export const updateUser = async (req: Request, res: Response) => {
   const user = await User.update(req.params.id, req.body);
