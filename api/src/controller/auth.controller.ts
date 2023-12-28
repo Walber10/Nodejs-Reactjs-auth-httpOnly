@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import { getUserByEmail } from "./user.controller";
 import { createToken } from "./jwt.controller";
 import { User } from "../entities/User";
-import { AppDataSource } from "../data-source";
+import AppDataSource from "../data-source";
 
 export const register = async (req: Request, res: Response) => {
   const user = await getUserByEmail(req.body.email);
