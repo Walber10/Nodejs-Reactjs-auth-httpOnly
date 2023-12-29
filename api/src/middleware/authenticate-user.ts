@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verifyToken } from "../controller/jwt.controller";
+import { verifyToken } from "../services/jwt/JwtService";
 
 declare module "express-serve-static-core" {
   interface Request {

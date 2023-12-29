@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import HandlebarsMailTemplate from "./HandlebarsMailTemplate";
+import { AppError, getErrorMessage } from "../../../middleware/error-handler";
 
 interface IMailContact {
   name: string;
@@ -31,9 +32,7 @@ export default class EtherealMail {
   }: ISendMail): Promise<void> {
     try {
       const account = await nodemailer.createTestAccount();
-
       const mailTemplate = new HandlebarsMailTemplate();
-
       const transporter = nodemailer.createTransport({
         host: account.smtp.host,
         port: account.smtp.port,
@@ -43,7 +42,6 @@ export default class EtherealMail {
           pass: account.pass,
         },
       });
-
       const message = await transporter.sendMail({
         from: {
           name: from?.name || "Walber Amorim",
@@ -58,7 +56,7 @@ export default class EtherealMail {
       });
       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(message));
     } catch (error) {
-      throw new Error("Failed to send email");
+      throw new AppError(getErrorMessage(error), 500);
     }
   }
 }

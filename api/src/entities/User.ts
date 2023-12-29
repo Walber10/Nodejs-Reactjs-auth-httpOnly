@@ -1,3 +1,4 @@
+import { resetPassword } from './../controller/auth.controller';
 import {
   Column,
   CreateDateColumn,
@@ -28,6 +29,9 @@ export class User extends BaseEntity {
 
   @Column({ type: "boolean", default: false })
   verified: boolean;
+
+  @Column({ type: "varchar", nullable: true })
+  resetPasswordToken: string;
 
   @CreateDateColumn()
   createdAt?: Date;

@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Request, Response, NextFunction } from "express";
-import { cookieParser } from "../utils/utils";
+import { cookieParser } from "../../utils/utils";
 dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
