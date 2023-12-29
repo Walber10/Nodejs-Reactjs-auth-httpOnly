@@ -1,48 +1,49 @@
-import { User } from "../../entities/User";
+import { UpdateResult } from "typeorm";
 import AppDataSource from "../../data-source";
+import { User } from "../../entities/User";
+import { AppError, getErrorMessage } from "../../middleware/error-handler";
+import { CreateUserInput } from "../../schema/user.schema";
 
-export const getUsers = async () => {
+export const createUserService = async (
+  userData: CreateUserInput
+): Promise<User> => {
+  const user = User.create(userData);
+  await AppDataSource.manager.save(user);
+  return user;
+};
+
+export const getAllUsersService = async (): Promise<User[]> => {
   try {
     return await User.find();
   } catch (error) {
-    throw new Error('Error fetching users');
+    throw new Error("Error fetching users");
   }
 };
 
-export const getUserById = async (id: number) => {
+export const getUserById = async (id: number): Promise<User | null> => {
   try {
     return await User.findOne({ where: { id } });
   } catch (error) {
-    throw new Error('Error fetching user');
+    throw new Error("Error fetching user");
   }
 };
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string): Promise<User | null> => {
   try {
     return await User.findOne({ where: { email } });
   } catch (error) {
-    throw new Error('Error fetching user by email');
+    throw new Error("Error fetching user by email");
   }
 };
 
-export const updateUser = async (id: number, userData: any) => {
+export const deleteUserService = async (id: number): Promise<void> => {
   try {
-    const user = await User.update(id, userData);
-    return user;
-  } catch (error) {
-    throw new Error('Error updating user');
-  }
-};
-
-export const deleteUser = async (id: number) => {
-  try {
-    const user = await User.findBy({ id });
+    const user = await User.findOne({ where: { id } });
     if (!user) {
-      return null; 
+      throw new AppError("User not found.", 404);
     }
     await AppDataSource.manager.delete(User, id);
-    return user;
   } catch (error) {
-    throw new Error('Error deleting user');
+    throw new AppError(getErrorMessage(error), 500);
   }
 };

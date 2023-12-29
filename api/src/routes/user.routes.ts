@@ -1,10 +1,11 @@
 import express from "express";
+import { Router } from "express";
 import authenticateUser from "../middleware/authenticate-user";
 import { deleteUser, getUsers } from "../controller/user.controller";
 
-const userRoutes = express.Router();
+const userRoutes = Router();
 
-userRoutes.get("/user", authenticateUser, getUsers);
-userRoutes.delete("/:id", authenticateUser, deleteUser);
+userRoutes.get("/users", getUsers);
+userRoutes.delete("user/:id", authenticateUser, deleteUser);
 
 export default userRoutes;

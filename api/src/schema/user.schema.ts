@@ -59,6 +59,16 @@ export const resetPasswordSchema = object({
   }),
 });
 
+export const userResponseSchema = object({
+  id: number(),
+  firstName: string(),
+  lastName: string(),
+  email: string(),
+  mobile: number(),
+});
+
+export interface UserResponse extends TypeOf<typeof userResponseSchema> {}
+
 export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
 
 export type VerifyUserInput = TypeOf<typeof verifyUserSchema>["params"];

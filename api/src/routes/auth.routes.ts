@@ -1,21 +1,30 @@
 import { Router } from "express";
 import {
-  forgotPassword,
-  loginUser,
-  registerUser,
+  forgotPasswordController,
+  getResetPasswordController,
+  loginController,
 } from "../controller/auth.controller";
 import { loginSchema } from "../schema/auth.schema";
 import verifySchema from "../middleware/validateResource";
 import { createUserSchema, forgotPasswordSchema } from "../schema/user.schema";
+import { registerUserController } from "../controller/user.controller";
 
 const authRoutes = Router();
 
-authRoutes.post("/login", verifySchema(loginSchema), loginUser);
-authRoutes.post("/register", verifySchema(createUserSchema), registerUser);
+authRoutes.post("/login", verifySchema(loginSchema), loginController);
+authRoutes.post(
+  "/register",
+  verifySchema(createUserSchema),
+  registerUserController
+);
 authRoutes.post(
   "/forgotpassword",
   verifySchema(forgotPasswordSchema),
-  forgotPassword
+  forgotPasswordController
 );
+
+authRoutes.get("/resetpassword/:token", (req, res) => {
+  getResetPasswordController(req, res);
+});
 
 export default authRoutes;

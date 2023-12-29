@@ -1,35 +1,64 @@
 import { Request, Response } from "express";
 import { User } from "../entities/User";
 import AppDataSource from "../data-source";
+import { AppError, getErrorMessage } from "../middleware/error-handler";
+import {
+  CreateUserInput,
+  UserResponse,
+  userResponseSchema,
+} from "../schema/user.schema";
+import { createToken } from "../services/jwt/JwtService";
+import { hash } from "bcrypt";
+import {
+  createUserService,
+  getUserByEmail,
+} from "../services/user/user-service";
 
-export const getUsers = async (req: Request, res: Response) => {
-  const users = await User.find();
-  res.send(users);
-  return res.status(200).json({
-    users,
-  });
-};
+export const registerUserController = async (req: Request, res: Response) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      password,
+      passwordConfirmation,
+      email,
+      mobile,
+    }: CreateUserInput = req.body;
 
-export const getUser = async (req: Request, res: Response) => {
-  const user = await User.findBy({ id: parseInt(req.params.id) });
-  if (!user) {
-    return res.status(404).send({ errors: { message: "User not found" } });
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      throw new AppError("User already exists", 400);
+    }
+
+    const hashedPassword = await hash(password, 10);
+
+    const newUser = await createUserService({
+      firstName,
+      lastName,
+      password: hashedPassword,
+      passwordConfirmation,
+      mobile,
+      email,
+    });
+
+    const token = createToken({ email: newUser.email }, true);
+
+    return res.status(201).json({
+      token: token.access_token,
+    });
+  } catch (error) {
+    throw new AppError(getErrorMessage(error), 500);
   }
-  return res.status(200).json({
-    user,
-  });
 };
 
-export const getUserByEmail = async (email: string) => {
-  const user = await User.findOne({ where: { email: email } });
-  return user;
-};
-
-export const updateUser = async (req: Request, res: Response) => {
-  const user = await User.update(req.params.id, req.body);
-  return res.status(200).json({
-    user,
-  });
+export const getUsers = async (req: Request, res: Response<UserResponse[]>) => {
+  try {
+    const users = await User.find();
+    const userResponse = users.map((user) => userResponseSchema.parse(user));
+    return res.status(200).json(userResponse);
+  } catch (error) {
+    throw new AppError(getErrorMessage(error), 500);
+  }
 };
 
 export const deleteUser = async (req: Request, res: Response) => {

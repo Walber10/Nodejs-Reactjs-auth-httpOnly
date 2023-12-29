@@ -1,10 +1,10 @@
 import { createToken } from "../../jwt/JwtService";
-import { AppError } from "../../../middleware/error-handler";
+import { AppError, getErrorMessage } from "../../../middleware/error-handler";
 import EtherealMail from "../../mail/utils/EtherealMail";
 import SESMail from "../../mail/utils/SESmail";
 import mailConfig from "../../mail/utils/mail";
 import path from "path";
-import { getUserByEmail, updateUser } from "../../user/user-service";
+import { getUserByEmail } from "../../user/user-service";
 import { User } from "../../../entities/User";
 
 export const SendForgotPasswordEmail = async (email: string) => {
@@ -14,11 +14,10 @@ export const SendForgotPasswordEmail = async (email: string) => {
   }
   try {
     const resetToken = createToken({ email: user.email }, true);
-    await updateUser(user.id, resetToken.access_token);
+    await User.update(user.id, { resetPasswordToken: resetToken.access_token });
     await sendEmail(user, resetToken.access_token);
   } catch (error) {
-    console.error("Error in SendForgotPasswordEmail:", error);
-    throw new AppError("Failed to send forgot password email");
+    throw new AppError(getErrorMessage(error), 500);
   }
 };
 
@@ -45,7 +44,7 @@ const sendEmail = async (user: User, resetToken: string) => {
       },
     });
   } catch (error) {
-    throw new AppError("Failed to send the email");
+    throw new AppError(getErrorMessage(error), 500);
   }
 };
 

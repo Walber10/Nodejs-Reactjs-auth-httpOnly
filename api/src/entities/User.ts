@@ -1,4 +1,3 @@
-import { resetPassword } from './../controller/auth.controller';
 import {
   Column,
   CreateDateColumn,
@@ -21,10 +20,10 @@ export class User extends BaseEntity {
   @Column({ type: "varchar", unique: true })
   email: string;
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar",  })
   password: string;
 
-  @Column({ type: "int", unique: true })
+  @Column({ type: "int", unique: true, })
   mobile: number;
 
   @Column({ type: "boolean", default: false })
@@ -35,12 +34,5 @@ export class User extends BaseEntity {
 
   @CreateDateColumn()
   createdAt?: Date;
-
-  get formattedCreatedAt(): string {
-    if (!this.createdAt) {
-      return "N/A";
-    }
-    return this.createdAt.toLocaleString();
-  }
 
 }
