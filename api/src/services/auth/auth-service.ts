@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { getUserByEmail } from "../user/user-service";
-import { createTokenService } from "../jwt/JwtService";
+import { createTokenService } from "../../middleware/JwtService";
 import { AppError } from "../../middleware/error-handler";
 
 export const loginUserService = async (email: string, password: string) => {

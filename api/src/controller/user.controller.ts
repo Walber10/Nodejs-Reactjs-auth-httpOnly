@@ -7,12 +7,13 @@ import {
   UserResponse,
   userResponseSchema,
 } from "../schema/user.schema";
-import { createTokenService } from "../services/jwt/JwtService";
+import { createTokenService } from "../middleware/JwtService";
 import { hash } from "bcrypt";
 import {
   createUserService,
   getUserByEmail,
 } from "../services/user/user-service";
+import { sendEmailVerification } from "../services/auth/email-verification/SendEmailVerificationService";
 
 export const registerUserController = async (req: Request, res: Response) => {
   try {
@@ -41,10 +42,13 @@ export const registerUserController = async (req: Request, res: Response) => {
       email,
     });
 
-    const token = createTokenService({ email: newUser.email }, true);
+    const token = createTokenService({ id: newUser.id });
+
+    await sendEmailVerification(newUser, token.access_token);
 
     return res.status(201).json({
-      token: token.access_token,
+      message:
+        "User created successfully, please check your email to verify your account",
     });
   } catch (error) {
     throw new AppError(getErrorMessage(error), 500);
@@ -53,7 +57,7 @@ export const registerUserController = async (req: Request, res: Response) => {
 
 export const getUsersController = async (
   req: Request,
-  res: Response<UserResponse[]>,
+  res: Response<UserResponse[]>
 ) => {
   try {
     const users = await User.find();

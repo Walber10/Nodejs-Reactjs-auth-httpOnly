@@ -2,9 +2,10 @@ import { hash } from "bcrypt";
 import { CreateSessionInput } from "./../schema/auth.schema";
 import { Request, Response } from "express";
 import * as AuthService from "../services/auth/auth-service";
-import { SendForgotPasswordEmail } from "../services/auth/forgot-password/SendForgotPasswordService";
+import { ForgotPasswordService } from "../services/auth/forgot-password/ForgotPasswordService";
 import { AppError, getErrorMessage } from "../middleware/error-handler";
 import { User } from "../entities/User";
+import { verifyUserByEmailToken } from "../services/auth/email-verification/VerifyUserService";
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -19,7 +20,7 @@ export const loginController = async (req: Request, res: Response) => {
 export const forgotPasswordController = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    await SendForgotPasswordEmail(email);
+    await ForgotPasswordService(email);
     return res.status(200).json({
       message: "Email sent successfully",
     });
@@ -30,7 +31,7 @@ export const forgotPasswordController = async (req: Request, res: Response) => {
 
 export const getResetPasswordController = async (
   req: Request,
-  res: Response,
+  res: Response
 ) => {
   try {
     const { token } = req.params;
@@ -57,5 +58,19 @@ export const getResetPasswordController = async (
       .send({ message: "The account has been verified. Please log in." });
   } catch (error) {
     throw new AppError(getErrorMessage(error));
+  }
+};
+
+export const emailVerificationController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { token } = req.params;
+    const result = await verifyUserByEmailToken(token);
+
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.status(500).send({ error: getErrorMessage(error) });
   }
 };
