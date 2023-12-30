@@ -11,3 +11,4 @@ userRoutes.get("/users", isAuth, getUsersController);
 userRoutes.delete("user/:id", isAuth, deleteUserController);
 
 export default userRoutes;
+
