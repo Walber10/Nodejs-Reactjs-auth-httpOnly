@@ -5,7 +5,7 @@ import { AppError, getErrorMessage } from "../../middleware/error-handler";
 import { CreateUserInput } from "../../schema/user.schema";
 
 export const createUserService = async (
-  userData: CreateUserInput
+  userData: CreateUserInput,
 ): Promise<User> => {
   const user = User.create(userData);
   await AppDataSource.manager.save(user);

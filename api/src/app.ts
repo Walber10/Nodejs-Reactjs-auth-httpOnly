@@ -24,7 +24,7 @@ app.use(
     credentials: true,
     origin: process.env.ORIGIN_ALLOWED,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  })
+  }),
 );
 app.use(errorHandler);
 app.use(rateLimiter);

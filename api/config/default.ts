@@ -1,4 +1,4 @@
 export default {
-    port: 3000 ,
-    jwtSecret: "@QEGTUI"
-}
+  port: 3000,
+  jwtSecret: "@QEGTUI",
+};

@@ -1,4 +1,4 @@
-import { createToken } from "../../jwt/JwtService";
+import { createTokenService } from "../../jwt/JwtService";
 import { AppError, getErrorMessage } from "../../../middleware/error-handler";
 import EtherealMail from "../../mail/utils/EtherealMail";
 import SESMail from "../../mail/utils/SESmail";
@@ -13,7 +13,7 @@ export const SendForgotPasswordEmail = async (email: string) => {
     throw new AppError("User not found", 404);
   }
   try {
-    const resetToken = createToken({ email: user.email }, true);
+    const resetToken = createTokenService({ email: user.email }, true);
     await User.update(user.id, { resetPasswordToken: resetToken.access_token });
     await sendEmail(user, resetToken.access_token);
   } catch (error) {
@@ -27,7 +27,7 @@ const sendEmail = async (user: User, resetToken: string) => {
       __dirname,
       "../../mail/",
       "views",
-      "forgot_password.hbs"
+      "forgot_password.hbs",
     );
     const userName = `${user.firstName} ${user.lastName}`;
     const mailService = getMailService();

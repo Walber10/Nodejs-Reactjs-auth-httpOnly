@@ -7,7 +7,7 @@ import {
   UserResponse,
   userResponseSchema,
 } from "../schema/user.schema";
-import { createToken } from "../services/jwt/JwtService";
+import { createTokenService } from "../services/jwt/JwtService";
 import { hash } from "bcrypt";
 import {
   createUserService,
@@ -41,7 +41,7 @@ export const registerUserController = async (req: Request, res: Response) => {
       email,
     });
 
-    const token = createToken({ email: newUser.email }, true);
+    const token = createTokenService({ email: newUser.email }, true);
 
     return res.status(201).json({
       token: token.access_token,
@@ -51,7 +51,10 @@ export const registerUserController = async (req: Request, res: Response) => {
   }
 };
 
-export const getUsers = async (req: Request, res: Response<UserResponse[]>) => {
+export const getUsersController = async (
+  req: Request,
+  res: Response<UserResponse[]>,
+) => {
   try {
     const users = await User.find();
     const userResponse = users.map((user) => userResponseSchema.parse(user));
@@ -61,7 +64,7 @@ export const getUsers = async (req: Request, res: Response<UserResponse[]>) => {
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUserController = async (req: Request, res: Response) => {
   const user = await User.findBy({ id: parseInt(req.params.id) });
   if (!user) {
     return res.status(404).send({ errors: { message: "User not found" } });

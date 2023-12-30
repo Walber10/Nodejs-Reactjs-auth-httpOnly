@@ -13,14 +13,12 @@ const verifySchema =
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        return res
-          .status(422)
-          .send({
-            errors: error.issues.map((issue) => ({
-              field: issue.path[1],
-              message: issue.message,
-            })),
-          });
+        return res.status(422).send({
+          errors: error.issues.map((issue) => ({
+            field: issue.path[1],
+            message: issue.message,
+          })),
+        });
       }
       return next(error);
     }

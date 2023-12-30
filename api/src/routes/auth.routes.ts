@@ -15,12 +15,12 @@ authRoutes.post("/login", verifySchema(loginSchema), loginController);
 authRoutes.post(
   "/register",
   verifySchema(createUserSchema),
-  registerUserController
+  registerUserController,
 );
 authRoutes.post(
   "/forgotpassword",
   verifySchema(forgotPasswordSchema),
-  forgotPasswordController
+  forgotPasswordController,
 );
 
 authRoutes.get("/resetpassword/:token", (req, res) => {

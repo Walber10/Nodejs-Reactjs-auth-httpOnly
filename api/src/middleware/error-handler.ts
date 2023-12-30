@@ -17,7 +17,7 @@ export default function errorHandler(
   err: Error,
   _: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   if (!err) {
     return next();

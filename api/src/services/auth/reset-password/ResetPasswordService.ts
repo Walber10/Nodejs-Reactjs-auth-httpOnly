@@ -11,7 +11,7 @@ interface IRequest {
   password: string;
 }
 
-export const ResetPassword = async ({
+export const ResetPasswordService = async ({
   token,
   password,
 }: IRequest): Promise<User> => {

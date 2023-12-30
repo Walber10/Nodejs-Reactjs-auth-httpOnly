@@ -5,7 +5,7 @@ import { cookieParser } from "../../utils/utils";
 dotenv.config();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const createToken = (payload: any, refresh = false) => {
+export const createTokenService = (payload: any, refresh = false) => {
   const accessToken = jwt.sign(payload, process.env.JWT_SECRET as string, {
     expiresIn: 30,
   });
@@ -13,7 +13,7 @@ export const createToken = (payload: any, refresh = false) => {
     access_token: accessToken,
     refresh_token: refresh
       ? jwt.sign(payload, process.env.JWT_SECRET as string, {
-          expiresIn: 30 * 24 * 60 * 60,
+          expiresIn: 24 * 60 * 60,
         })
       : null,
   };
@@ -38,7 +38,8 @@ export const verifyAccessToken = (
     return res.status(405).json({ errors: { msg: "No token provided" } });
 
   const token = authHeader.split(" ")[1];
-  if (verifyToken(token))
+  console.log(token);
+  if (!verifyToken(token))
     return res.status(401).json({ errors: { msg: "Unauthorized" } });
   else {
     next();
@@ -51,8 +52,7 @@ export const grantNewAccessToken = (req: Request, res: Response) => {
   if (!decoded || typeof decoded == "string")
     res.status(405).json({ errors: { msg: "invalid token" } });
   else {
-    const newAccessToken = createToken({ email: decoded.email }, false);
-
+    const newAccessToken = createTokenService({ email: decoded.email }, false);
     res.send({
       message: "New access token granted",
       access_token: newAccessToken.access_token,

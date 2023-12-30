@@ -9,7 +9,7 @@ import { User } from "../entities/User";
 export const loginController = async (req: Request, res: Response) => {
   try {
     const { email, password }: CreateSessionInput = req.body;
-    const token = await AuthService.loginUser(email, password);
+    const token = await AuthService.loginUserService(email, password);
     return res.status(200).send({ token });
   } catch (error) {
     throw new AppError(getErrorMessage(error));
@@ -30,7 +30,7 @@ export const forgotPasswordController = async (req: Request, res: Response) => {
 
 export const getResetPasswordController = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { token } = req.params;
