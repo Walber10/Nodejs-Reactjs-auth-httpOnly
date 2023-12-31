@@ -1,6 +1,7 @@
+import { useGetUsersQuery } from "../../services/userService";
 
 export const Public = () => {
-  return (
-    <div>Public</div>
-  )
-}
+  const { data } = useGetUsersQuery();
+  console.log(data);
+  return <div>Public</div>;
+};

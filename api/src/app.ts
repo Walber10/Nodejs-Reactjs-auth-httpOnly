@@ -23,7 +23,6 @@ app.use(
   cors({
     credentials: true,
     origin: process.env.ORIGIN_ALLOWED,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   }),
 );
 app.use(errorHandler);
