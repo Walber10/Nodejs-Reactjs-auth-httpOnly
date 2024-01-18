@@ -14,8 +14,12 @@ import {
   getUserByEmail,
 } from "../services/user/user-service";
 import { sendEmailVerification } from "../services/auth/email-verification/SendEmailVerificationService";
+import { LoginResponse } from "../schema/auth.schema";
 
-export const registerUserController = async (req: Request, res: Response) => {
+export const registerUserController = async (
+  req: Request,
+  res: Response<LoginResponse>
+) => {
   try {
     const {
       firstName,
@@ -41,15 +45,15 @@ export const registerUserController = async (req: Request, res: Response) => {
       mobile,
       email,
     });
-
     const token = createTokenService({ id: newUser.id });
 
     await sendEmailVerification(newUser, token.access_token);
 
-    return res.status(201).json({
-      message:
-        "User created successfully, please check your email to verify your account",
+    return res.status(200).json({
+      userName: newUser.firstName,
+      token: token.access_token,
     });
+
   } catch (error) {
     throw new AppError(getErrorMessage(error), 500);
   }

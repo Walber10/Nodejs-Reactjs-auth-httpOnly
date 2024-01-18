@@ -1,10 +1,9 @@
 import { Routes, Route, Outlet } from "react-router-dom";
-
-import "./App.css";
 import { RequireAuth } from "./common/auth/RequireAuth";
-import { Login } from "./routes/login/Login";
+import { LoginPage } from "./routes/login/Login";
 import { Welcome } from "./routes/welcome/Welcome";
 import { Public } from "./routes/public/Public";
+import "../src/output.css";
 
 function App() {
   return (
@@ -12,7 +11,7 @@ function App() {
       <Route path="/" element={<Outlet />}>
         {/* public routes */}
         <Route index element={<Public />} />
-        <Route path="login" element={<Login />} />
+        <Route path="login" element={<LoginPage />} />
 
         {/* protected routes */}
         <Route element={<RequireAuth />}>

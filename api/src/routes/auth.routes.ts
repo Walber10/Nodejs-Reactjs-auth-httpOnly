@@ -5,14 +5,14 @@ import {
   getResetPasswordController,
   loginController,
 } from "../controller/auth.controller";
-import { loginSchema } from "../schema/auth.schema";
+import { loginRequestSchema } from "../schema/auth.schema";
 import verifySchema from "../middleware/validateResource";
 import { createUserSchema, forgotPasswordSchema } from "../schema/user.schema";
 import { registerUserController } from "../controller/user.controller";
 
 const authRoutes = Router();
 
-authRoutes.post("/login", verifySchema(loginSchema), loginController);
+authRoutes.post("/login", verifySchema(loginRequestSchema), loginController);
 authRoutes.post(
   "/register",
   verifySchema(createUserSchema),

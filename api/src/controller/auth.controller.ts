@@ -1,5 +1,5 @@
 import { hash } from "bcrypt";
-import { CreateSessionInput } from "./../schema/auth.schema";
+import { LoginRequest, LoginResponse } from "./../schema/auth.schema";
 import { Request, Response } from "express";
 import * as AuthService from "../services/auth/auth-service";
 import { ForgotPasswordService } from "../services/auth/forgot-password/ForgotPasswordService";
@@ -7,11 +7,17 @@ import { AppError, getErrorMessage } from "../middleware/error-handler";
 import { User } from "../entities/User";
 import { verifyUserByEmailToken } from "../services/auth/email-verification/VerifyUserService";
 
-export const loginController = async (req: Request, res: Response) => {
+export const loginController = async (
+  req: Request,
+  res: Response<LoginResponse>
+) => {
   try {
-    const { email, password }: CreateSessionInput = req.body;
+    const { email, password }: LoginRequest = req.body;
     const token = await AuthService.loginUserService(email, password);
-    return res.status(200).send({ token });
+    return res.status(200).json({
+      userName: token.user.firstName + " " + token.user.lastName,
+      token: token.access_token,
+    });
   } catch (error) {
     throw new AppError(getErrorMessage(error));
   }
