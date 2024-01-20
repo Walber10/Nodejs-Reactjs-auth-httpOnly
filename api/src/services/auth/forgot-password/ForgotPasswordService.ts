@@ -39,7 +39,7 @@ const sendEmailForgotPassword = async (user: User, resetToken: string) => {
         file: forgotPasswordTemplate,
         variables: {
           name: userName,
-          link: `${process.env.APP_WEB_URL}/reset_password?token=${resetToken}`,
+          link: `${process.env.APP_WEB_URL}/resetpassword?token=${resetToken}`,
         },
       },
     });

@@ -6,6 +6,7 @@ import { Public } from "./routes/public/Public";
 import "../src/output.css";
 import { RegisterUserPage } from "./routes/register/RegisterUserPage";
 import { ForgotPasswordPage } from "./routes/forgot-password/ForgotPasswordPage";
+import { ResetPasswordPage } from "./routes/reset-password/ResetPasswordPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterUserPage />} />
         <Route path="forgotpassword" element={<ForgotPasswordPage />} />
+        <Route path="resetpassword" element={<ResetPasswordPage />} />
         <Route path="*" element={<div>404</div>} />
 
         {/* protected routes */}

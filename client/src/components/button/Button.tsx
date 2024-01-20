@@ -12,7 +12,7 @@ enum BackgroundColorsStyles {
 interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   text: string;
   type_: "submit" | "button" | "reset";
-  onClick: React.MouseEventHandler;
+  onClick?: React.MouseEventHandler;
   bgColor?: keyof typeof BackgroundColorsStyles;
   className?: string;
 }

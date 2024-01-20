@@ -18,6 +18,12 @@ export interface ForgotPasswordRequest {
   email: string;
 }
 
+export interface ResetPasswordRequest {
+  password: string;
+  confirmPassword: string;
+  token: string;
+}
+
 interface RefreshTokenResponse {
   token: string;
 }
@@ -55,6 +61,13 @@ export const AuthAPI = API.injectEndpoints({
         body,
       }),
     }),
+    resetPassword: builder.mutation<unknown, APIPayload<ResetPasswordRequest>>({
+      query: (body) => ({
+        url: `/resetpassword`,
+        method: "POST",
+        body,
+      }),
+    }),
     refreshToken: builder.mutation<
       APIData<RefreshTokenResponse>,
       APIPayload<void>
@@ -75,4 +88,5 @@ export const {
   useSignInMutation,
   useSignUpMutation,
   useForgotPasswordMutation,
+  useResetPasswordMutation,
 } = AuthAPI;

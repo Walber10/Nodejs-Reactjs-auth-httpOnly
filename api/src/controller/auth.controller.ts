@@ -1,4 +1,4 @@
-import { isAuth } from './../middleware/JwtService';
+import { isAuth } from "./../middleware/JwtService";
 import { hash } from "bcrypt";
 import { LoginRequest, LoginResponse } from "./../schema/auth.schema";
 import { Request, Response } from "express";
@@ -44,19 +44,20 @@ export const forgotPasswordController = async (req: Request, res: Response) => {
   }
 };
 
-export const getResetPasswordController = async (
-  req: Request,
-  res: Response
-) => {
+export const resetPasswordController = async (req: Request, res: Response) => {
   try {
-    const { token } = req.params;
-    const { password } = req.body;
+    const { password, confirmPassword, token } = req.body;
     const user = await User.findOne({ where: { resetPasswordToken: token } });
     if (!user) {
       return res
         .status(404)
         .send({ message: `We were unable to find a user for this token.` });
     }
+
+    if (password !== confirmPassword)
+      return res.status(400).send({
+        message: "Password and confirm password didn't match.",
+      });
 
     if (user.resetPasswordToken !== token)
       return res.status(400).send({
@@ -66,7 +67,11 @@ export const getResetPasswordController = async (
 
     const hashedPassword = await hash(password, 10);
 
-    await User.update(user.id, { password: hashedPassword });
+    await User.update(user.id, {
+      password: hashedPassword,
+      verified: true,
+      resetPasswordToken: undefined,
+    });
 
     return res
       .status(200)

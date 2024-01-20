@@ -7,6 +7,27 @@ import {
   useForgotPasswordMutation,
 } from "../../services/authService";
 import Container from "../../components/container/Container";
+import { useNavigate } from "react-router-dom";
+import { CustomButton } from "../../components/button/Button";
+
+const EmailSendConfirmation = () => {
+  const navigate = useNavigate();
+  return (
+    <Layout>
+      <Container>
+      <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        We will send you an email with instructions on how to reset your
+        password.
+      </h2>
+      <CustomButton
+        text="Go back to login"
+        type_="button"
+        onClick={() => navigate("/login")}
+      />
+      </Container>
+    </Layout>
+  );
+};
 
 const ForgotPasswordForm = ({
   onSubmit,
@@ -38,17 +59,24 @@ const ForgotPasswordForm = ({
   );
 };
 export const ForgotPasswordPage = () => {
-  const [mutate] = useForgotPasswordMutation();
+  const [mutate, {isLoading}] = useForgotPasswordMutation();
+  const [emailSent, setEmailSent] = React.useState(false);
   const onSubmit: SubmitHandler<ForgotPasswordRequest> = async (data) => {
     try {
       await mutate(data).unwrap();
+      setEmailSent(true);
     } catch (error) {
       // Handle any errors that occurred during the mutation
     }
   };
+  if (isLoading) return <div>Loading...</div>;
   return (
     <Layout>
-      <ForgotPasswordForm onSubmit={onSubmit} />
+      {emailSent ? (
+        <EmailSendConfirmation />
+      ) : (
+        <ForgotPasswordForm onSubmit={onSubmit} />
+      )}
     </Layout>
   );
 };

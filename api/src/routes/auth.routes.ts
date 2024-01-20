@@ -3,7 +3,7 @@ import {
   authController,
   emailVerificationController,
   forgotPasswordController,
-  getResetPasswordController,
+  resetPasswordController,
   loginController,
 } from "../controller/auth.controller";
 import { loginRequestSchema } from "../schema/auth.schema";
@@ -26,8 +26,8 @@ authRoutes.post(
   verifySchema(forgotPasswordSchema),
   forgotPasswordController
 );
-authRoutes.get("/resetpassword/:token", (req, res) => {
-  getResetPasswordController(req, res);
+authRoutes.post("/resetpassword", (req, res) => {
+  resetPasswordController(req, res);
 });
 authRoutes.post("/emailverification/:token", (req, res) => {
   emailVerificationController(req, res);
