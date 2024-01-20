@@ -1,12 +1,14 @@
-import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectCurrentToken } from "../../redux/slices/authSlice";
+import { Navigate, Outlet } from "react-router-dom";
+
+import { useGetAuthQuery } from "../../services/authService";
 
 export const RequireAuth = () => {
-  const token = useSelector(selectCurrentToken);
-  const location = useLocation();
+  const { data, isLoading } = useGetAuthQuery();
 
-  if (!token) {
+  console.log(data)
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!data?.isAuth) {
     return <Navigate to={`/login?redirect=${location.pathname}`} />;
   }
   return <Outlet />;

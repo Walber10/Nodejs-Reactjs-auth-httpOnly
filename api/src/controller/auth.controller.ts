@@ -1,3 +1,4 @@
+import { isAuth } from './../middleware/JwtService';
 import { hash } from "bcrypt";
 import { LoginRequest, LoginResponse } from "./../schema/auth.schema";
 import { Request, Response } from "express";
@@ -7,13 +8,21 @@ import { AppError, getErrorMessage } from "../middleware/error-handler";
 import { User } from "../entities/User";
 import { verifyUserByEmailToken } from "../services/auth/email-verification/VerifyUserService";
 
+export const authController = async (req: Request, res: Response) => {
+  try {
+    return res.status(200).json({ message: "success", isAuth: true });
+  } catch (error) {
+    throw new AppError(getErrorMessage(error));
+  }
+};
+
 export const loginController = async (
   req: Request,
   res: Response<LoginResponse>
 ) => {
   try {
     const { email, password }: LoginRequest = req.body;
-    const token = await AuthService.loginUserService(email, password);
+    const token = await AuthService.loginUserService(email, password, res);
     return res.status(200).json({
       userName: token.user.firstName + " " + token.user.lastName,
       token: token.access_token,

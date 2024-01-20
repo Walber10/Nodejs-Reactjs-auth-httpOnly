@@ -1,10 +1,9 @@
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import CustomInput from "../../components/input/Input";
-import Container from "../../components/container/FlexContainer";
+import Layout from "../../components/container/Layout";
 import { LoginRequest, useSignInMutation } from "../../services/authService";
-import { useDispatch } from "react-redux";
-import { addAuth } from "../../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import { CustomButton } from "../../components/button/Button";
 
 const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
   const { control, handleSubmit } = useForm<LoginRequest>({
@@ -15,7 +14,7 @@ const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
   });
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Container className="space-y-6">
+      <Layout className="space-y-6">
         <Controller
           name="email"
           control={control}
@@ -36,26 +35,17 @@ const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
           )}
         />
         <input type="submit" />
-      </Container>
+      </Layout>
     </form>
   );
 };
 export const LoginPage = () => {
   const [signIn, { isLoading, isError }] = useSignInMutation();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
     try {
-      const response = await signIn(data).unwrap();
-      if (response?.token) {
-        dispatch(
-          addAuth({
-            token: response.token,
-            userName: response.userName,
-          })
-        );
-      }
+      await signIn(data).unwrap();
       navigate("/welcome");
     } catch (error) {
       // Handle any errors that occurred during the mutation
@@ -65,7 +55,7 @@ export const LoginPage = () => {
   if (isError) return <div>Error...</div>;
 
   return (
-    <Container>
+    <Layout>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
@@ -73,7 +63,13 @@ export const LoginPage = () => {
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <LoginForm onSubmit={onSubmit} />
+        <CustomButton
+          type_="button"
+          text="forgot my password"
+          bgColor="transparent"
+          onClick={() => navigate("/forgotpassword")}
+        />
       </div>
-    </Container>
+    </Layout>
   );
 };

@@ -5,7 +5,7 @@ type Props = {
   className?: string;
 };
 
-const Container = ({ children, className }: Props) => {
+const Layout = ({ children, className }: Props) => {
   return (
     <div
       className={`flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 ${className}`}
@@ -15,4 +15,4 @@ const Container = ({ children, className }: Props) => {
   );
 };
 
-export default Container;
+export default Layout;

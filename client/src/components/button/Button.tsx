@@ -6,6 +6,7 @@ enum BackgroundColorsStyles {
   yellow = "bg-yellow-300/70 hover:bg-yellow-300 focus:ring-yellow-300",
   green = "bg-green-300/70 hover:bg-green-300 focus:ring-green-300",
   blue = "bg-blue-300/70 hover:bg-blue-300 focus:ring-blue-300",
+  transparent = "bg-transparent hover:bg-gray-100 focus:ring-gray-100",
 }
 
 interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
