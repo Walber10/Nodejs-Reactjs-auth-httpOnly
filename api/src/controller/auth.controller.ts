@@ -19,7 +19,7 @@ export const loginController = async (
       token: token.access_token,
     });
   } catch (error) {
-    throw new AppError(getErrorMessage(error));
+    throw new AppError("Invalid credentials", 400);
   }
 };
 

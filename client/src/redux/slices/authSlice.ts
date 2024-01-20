@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AuthResponse } from "../../services/authService";
 
 type InitialState = {
   isAuthenticated: boolean;
@@ -14,10 +15,10 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    addAuth: (state, action: PayloadAction<InitialState>) => {
-      state.isAuthenticated = action.payload.isAuthenticated;
+    addAuth: (state, action: PayloadAction<AuthResponse>) => {
+      state.isAuthenticated = true;
       state.token = action.payload.token;
-      localStorage.setItem("token", action.payload.token!);
+      localStorage.setItem("token", action.payload.token);
     },
     removeAuth: (state) => {
       state.isAuthenticated = false;
@@ -33,3 +34,4 @@ export const selectCurrentToken = (state: { auth: InitialState }) =>
   state.auth.token;
 
 export default authSlice.reducer;
+

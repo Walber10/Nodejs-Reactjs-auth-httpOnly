@@ -1,56 +1,75 @@
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import CustomInput from "../../components/input/Input";
 import Container from "../../components/container/FlexContainer";
+import { LoginRequest, useSignInMutation } from "../../services/authService";
+import { useDispatch } from "react-redux";
+import { addAuth } from "../../redux/slices/authSlice";
 
-interface IFormInput {
-  firstName: string;
-  lastName: string;
-  iceCreamType: { label: string; value: string };
-}
-
-const LoginForm = () => {
-  const { control, handleSubmit } = useForm<IFormInput>({
+const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
+  const { control, handleSubmit } = useForm<LoginRequest>({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      iceCreamType: {},
+      email: "",
+      password: "",
     },
   });
-
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Controller
-        name="firstName"
-        control={control}
-        render={({ field }) => (
-          <CustomInput label="Email" required {...field} />
-        )}
-      />
-      <input type="submit" />
+      <Container className="space-y-6">
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => (
+            <CustomInput label="Email" required {...field} />
+          )}
+        />
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <CustomInput
+              label="Password"
+              required
+              {...field}
+              inputType="password"
+            />
+          )}
+        />
+        <input type="submit" />
+      </Container>
     </form>
   );
 };
 export const LoginPage = () => {
+  const [signIn, { isLoading, isError }] = useSignInMutation();
+  const dispatch = useDispatch();
+
+  const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
+    try {
+      const response = await signIn(data).unwrap();
+      if (response?.token) {
+        dispatch(
+          addAuth({
+            token: response.token,
+            userName: response.userName,
+          })
+        );
+      }
+    } catch (error) {
+      // Handle any errors that occurred during the mutation
+    }
+  };
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error...</div>;
+
   return (
     <Container>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        />
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sign in to your account
         </h2>
       </div>
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6">
-          <LoginForm />
-        </form>
+        <LoginForm onSubmit={onSubmit} />
       </div>
     </Container>
   );
