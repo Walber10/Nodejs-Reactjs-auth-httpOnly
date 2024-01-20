@@ -4,6 +4,7 @@ import Container from "../../components/container/FlexContainer";
 import { LoginRequest, useSignInMutation } from "../../services/authService";
 import { useDispatch } from "react-redux";
 import { addAuth } from "../../redux/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
   const { control, handleSubmit } = useForm<LoginRequest>({
@@ -42,6 +43,7 @@ const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
 export const LoginPage = () => {
   const [signIn, { isLoading, isError }] = useSignInMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
     try {
@@ -54,6 +56,7 @@ export const LoginPage = () => {
           })
         );
       }
+      navigate("/welcome");
     } catch (error) {
       // Handle any errors that occurred during the mutation
     }
