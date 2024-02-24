@@ -15,15 +15,15 @@ const EmailSendConfirmation = () => {
   return (
     <Layout>
       <Container>
-      <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-        We will send you an email with instructions on how to reset your
-        password.
-      </h2>
-      <CustomButton
-        text="Go back to login"
-        type_="button"
-        onClick={() => navigate("/login")}
-      />
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          We will send you an email with instructions on how to reset your
+          password.
+        </h2>
+        <CustomButton
+          text="Go back to login"
+          type_="button"
+          onClick={() => navigate("/login")}
+        />
       </Container>
     </Layout>
   );
@@ -53,13 +53,13 @@ const ForgotPasswordForm = ({
             <CustomInput label="Email" required {...field} />
           )}
         />
-        <input type="submit" />
+        <input type="submit" className="bg-yellow-300/70" />
       </Container>
     </form>
   );
 };
 export const ForgotPasswordPage = () => {
-  const [mutate, {isLoading}] = useForgotPasswordMutation();
+  const [mutate, { isLoading }] = useForgotPasswordMutation();
   const [emailSent, setEmailSent] = React.useState(false);
   const onSubmit: SubmitHandler<ForgotPasswordRequest> = async (data) => {
     try {

@@ -1,9 +1,15 @@
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import CustomInput from "../../components/input/Input";
 import Layout from "../../components/container/Layout";
-import { LoginRequest, useSignInMutation } from "../../services/authService";
+import {
+  LoginRequest,
+  useGetAuthQuery,
+  useSignInMutation,
+} from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { CustomButton } from "../../components/button/Button";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/slices/authSlice";
 
 const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
   const { control, handleSubmit } = useForm<LoginRequest>({
@@ -40,12 +46,22 @@ const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
   );
 };
 export const LoginPage = () => {
+  const dispatch = useDispatch();
   const [signIn, { isLoading, isError }] = useSignInMutation();
+  const { refetch } = useGetAuthQuery();
+
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
     try {
-      await signIn(data).unwrap();
+      const response = await signIn(data).unwrap();
+      dispatch(
+        setUser({
+          name: response.userName,
+          email: data.email,
+        })
+      );
+      await refetch();
       navigate("/welcome");
     } catch (error) {
       // Handle any errors that occurred during the mutation

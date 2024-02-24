@@ -1,3 +1,4 @@
+import { LogoutController } from "./../controller/auth.controller";
 import { Router } from "express";
 import {
   authController,
@@ -16,6 +17,7 @@ const authRoutes = Router();
 
 authRoutes.get("/auth", isAuth, authController);
 authRoutes.post("/login", verifySchema(loginRequestSchema), loginController);
+authRoutes.post("/logout", isAuth, LogoutController);
 authRoutes.post(
   "/register",
   verifySchema(createUserSchema),

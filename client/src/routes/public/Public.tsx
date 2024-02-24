@@ -1,7 +1,19 @@
-import { useGetUsersQuery } from "../../services/userService";
+import { CustomButton } from "../../components/button/Button";
+import { useNavigate } from "react-router-dom";
+import Container from "../../components/container/Container";
 
 export const Public = () => {
-  const { data } = useGetUsersQuery();
-  console.log(data);
-  return <div>Public</div>;
+  const navigate = useNavigate();
+  return (
+    <div>
+      <Container className="mt-10">
+        <p>Welcome to the public page</p>
+        <CustomButton
+          text="LOGIN"
+          type_="button"
+          onClick={() => navigate("/login")}
+        />
+      </Container>
+    </div>
+  );
 };

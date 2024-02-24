@@ -32,13 +32,14 @@ export const loginController = async (
   }
 };
 
-const LogoutController = async (req: Request, res: Response) => {
+export const LogoutController = async (req: Request, res: Response) => {
   try {
-    return res.status(200).json({ message: "success", isAuth: true });
+    res.clearCookie("jwt");
+    return res.status(200).json({ message: "success" });
   } catch (error) {
     throw new AppError(getErrorMessage(error));
   }
-}
+};
 
 export const forgotPasswordController = async (req: Request, res: Response) => {
   try {
