@@ -9,6 +9,7 @@ import Container from "../../components/container/Container";
 import CustomInput from "../../components/input/Input";
 import Layout from "../../components/container/Layout";
 import { CustomButton } from "../../components/button/Button";
+import { toast } from "react-toastify";
 
 const ResetPasswordForm = ({
   onSubmit,
@@ -62,7 +63,7 @@ export const ResetPasswordPage = () => {
       await resetPassword({ ...data, token }).unwrap();
       navigate("/welcome");
     } catch (error) {
-      // Handle any errors that occurred during the mutation
+      toast.error("Failed to reset password");
     }
   };
   return (

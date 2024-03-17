@@ -4,6 +4,7 @@ import Container from "../../components/container/Container";
 import Layout from "../../components/container/Layout";
 import { useAppSelector } from "../../redux/hooks";
 import { useLogOutMutation } from "../../services/authService";
+import { toast } from "react-toastify";
 
 export const WelcomePage = () => {
   const data = useAppSelector((state) => state.user);
@@ -24,7 +25,7 @@ export const WelcomePage = () => {
               await logOut();
               navigate("/login");
             } catch (error) {
-              console.log(error);
+              toast.error("Failed to logout");
             }
           }}
         />

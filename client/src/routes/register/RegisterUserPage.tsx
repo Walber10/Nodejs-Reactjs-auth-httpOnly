@@ -5,6 +5,7 @@ import { useSignUpMutation } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
 import { RegisterUserRequest } from "../../common/model/User";
 import Container from "../../components/container/Container";
+import { toast } from "react-toastify";
 
 const RegisterUserForm = ({
   onSubmit,
@@ -77,7 +78,7 @@ const RegisterUserForm = ({
   );
 };
 export const RegisterUserPage = () => {
-  const [signUp, { isLoading, isError }] = useSignUpMutation();
+  const [signUp, { isLoading }] = useSignUpMutation();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<RegisterUserRequest> = async (data) => {
@@ -85,11 +86,10 @@ export const RegisterUserPage = () => {
       await signUp({ ...data, mobile: Number(data.mobile) }).unwrap();
       navigate("/welcome");
     } catch (error) {
-      // Handle any errors that occurred during the mutation
+      toast.error("Failed to register user");
     }
   };
   if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error...</div>;
 
   return (
     <Layout>

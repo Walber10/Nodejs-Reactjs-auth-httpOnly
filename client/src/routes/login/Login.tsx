@@ -18,7 +18,6 @@ const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
       email: "",
       password: "",
     },
-    shouldUnregister: false, // Add this line
   });
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -54,8 +53,7 @@ export const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<LoginRequest> = async (data, event) => {
-    event?.preventDefault();
+  const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
     try {
       const response = await signIn(data).unwrap();
       dispatch(
