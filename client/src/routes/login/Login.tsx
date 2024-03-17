@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { CustomButton } from "../../components/button/Button";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slices/authSlice";
+import { toast } from "react-toastify";
 
 const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
   const { control, handleSubmit } = useForm<LoginRequest>({
@@ -17,6 +18,7 @@ const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
       email: "",
       password: "",
     },
+    shouldUnregister: false, // Add this line
   });
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -47,12 +49,13 @@ const LoginForm = ({ onSubmit }: { onSubmit: SubmitHandler<LoginRequest> }) => {
 };
 export const LoginPage = () => {
   const dispatch = useDispatch();
-  const [signIn, { isLoading, isError }] = useSignInMutation();
+  const [signIn, { isLoading }] = useSignInMutation();
   const { refetch } = useGetAuthQuery();
 
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
+  const onSubmit: SubmitHandler<LoginRequest> = async (data, event) => {
+    event?.preventDefault();
     try {
       const response = await signIn(data).unwrap();
       dispatch(
@@ -64,11 +67,9 @@ export const LoginPage = () => {
       await refetch();
       navigate("/welcome");
     } catch (error) {
-      // Handle any errors that occurred during the mutation
+      toast.error("Invalid email or password");
     }
   };
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error...</div>;
 
   return (
     <Layout>
@@ -84,6 +85,7 @@ export const LoginPage = () => {
           text="forgot my password"
           bgColor="transparent"
           onClick={() => navigate("/forgotpassword")}
+          isLoading={isLoading}
         />
       </div>
     </Layout>

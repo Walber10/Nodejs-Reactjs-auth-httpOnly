@@ -15,6 +15,7 @@ interface ButtonProps extends React.HTMLProps<HTMLButtonElement> {
   onClick?: React.MouseEventHandler;
   bgColor?: keyof typeof BackgroundColorsStyles;
   className?: string;
+  isLoading?: boolean;
 }
 
 export const CustomButton: React.FC<ButtonProps> = ({
@@ -23,6 +24,7 @@ export const CustomButton: React.FC<ButtonProps> = ({
   type_,
   onClick,
   className,
+  isLoading,
 }) => {
   return (
     <>
@@ -37,7 +39,7 @@ export const CustomButton: React.FC<ButtonProps> = ({
         )}
         onClick={onClick}
       >
-        {text}
+        {isLoading ? "loading" : text}
       </button>
     </>
   );
